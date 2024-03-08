@@ -9,6 +9,7 @@ class HashMap {
       this.map[i] = new LinkedList();
     }
     this.loadFactor = 0.75;
+    this.entryNum = 0;
   }
 
   hash(key) {
@@ -29,6 +30,7 @@ class HashMap {
     let setNode = new LinkedListNode([key, value]);
     if (!bucket.head) {
       bucket.head = setNode;
+      this.entryNum += 1;
     } else {
       let cur = bucket.head;
       if (cur.value[0] === key) {
@@ -43,6 +45,7 @@ class HashMap {
         }
       }
       cur.next = setNode;
+      this.entryNum += 1;
     }
   }
 
@@ -100,6 +103,7 @@ class HashMap {
     let pre = null;
     if (cur.value[0] === key) {
       bucket.head = cur.next;
+      this.entryNum -= 1;
       return true;
     }
     while (cur.next) {
@@ -107,10 +111,67 @@ class HashMap {
       cur = cur.next;
       if (cur.value[0] === key) {
         pre.next = cur.next;
+        this.entryNum -= 1;
         return true;
       }
     }
     return false;
+  }
+
+  length() {
+    return this.entryNum;
+  }
+
+  clear() {
+    for (let i = 0; i < this.size; i++) {
+      this.map[i] = new LinkedList();
+    }
+    this.entryNum = 0;
+  }
+
+  keys() {
+    let arr = [];
+    this.map.forEach((bucket) => {
+      if (bucket.head) {
+        let cur = bucket.head;
+        arr.push(cur.value[0]);
+        while (cur.next) {
+          cur = cur.next;
+          arr.push(cur.value[0]);
+        }
+      }
+    });
+    return arr;
+  }
+
+  values() {
+    let arr = [];
+    this.map.forEach((bucket) => {
+      if (bucket.head) {
+        let cur = bucket.head;
+        arr.push(cur.value[1]);
+        while (cur.next) {
+          cur = cur.next;
+          arr.push(cur.value[1]);
+        }
+      }
+    });
+    return arr;
+  }
+
+  entries() {
+    let arr = [];
+    this.map.forEach((bucket) => {
+      if (bucket.head) {
+        let cur = bucket.head;
+        arr.push(cur.value);
+        while (cur.next) {
+          cur = cur.next;
+          arr.push(cur.value);
+        }
+      }
+    });
+    return arr;
   }
 }
 
